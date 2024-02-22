@@ -2,9 +2,7 @@ const { ApolloServer } = require("apollo-server-express");
 const express = require("express");
 const { expressjwt: jwt } = require("express-jwt");
 
-const resolvers = require("./schemas/resolvers.js");
-const typedefs = require("./schemas/typedefs.js");
-
+const { typeDefs, resolvers } = require('./schemas');
 const port = 3000;
 const app = express();
 
@@ -16,16 +14,20 @@ app.use(
   })
 );
 
-const server = new ApolloServer({
-  typedefs,
-  resolvers,
-  context: ({ req }) => {
-    const user = req.user || null;
-    return { user };
-  },
-});
+async function startServer() {
+  server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) => {
+      const user = req.user || null;
+      return { user };
+    },
+  });
+  await server.start();
+  server.applyMiddleware({ app });
+}
 
-server.applyMiddleware({ app });
+startServer();
 
 app.listen({ port }, () => {
   console.log(

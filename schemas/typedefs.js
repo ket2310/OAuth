@@ -1,7 +1,6 @@
-import { gql } from "apollo-server-express";
+const { gql } = require("apollo-server-express");
 
-export default gql`
-  type User {
+const typeDefs = gql`  type User {
     id: ID!
     name: String
   }
@@ -11,7 +10,9 @@ export default gql`
     viewer: User!
   }
 
-  type mutation {
+  type Mutation {
     login(email: String!, password: String!): String
   }
 `;
+
+module.exports = typeDefs;
